@@ -1,0 +1,25 @@
+name: xeddsa
+description: A flutter plugin for using C-written xeddsa algorithm through ffi.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ffi: ^0.1.3
+  cryptography: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms: 
+      android: 
+        package: com.example.xeddsa
+        pluginClass: XeddsaPlugin
