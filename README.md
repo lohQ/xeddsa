@@ -1,6 +1,12 @@
 # xeddsa
 
-A new flutter plugin project.
+A simple flutter plugin project providing ffi for xeddsa digital signature algorithm written in C.
+
+## note
+
+1. Currently only supports Android. IOS will require extra configuration (see https://flutter.dev/docs/development/platform-integration/c-interop)
+
+2. The random bytes passed into the xed25519_sign function, if used, will cause the app to crash. Hence tweaked the implementation to not using this parameter. (TODO: Debug this)
 
 ## Getting Started
 
