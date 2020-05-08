@@ -8,8 +8,6 @@ A simple flutter plugin project providing ffi for xeddsa digital signature algor
 
 2. The random bytes passed into the xed25519_sign function, if used, will cause the app to crash. Hence tweaked the implementation to not using this parameter. (TODO: Debug this)
 
-3. The signing and verifying process is rather slow. (TODO: at least 10 signing/verifying in one second) 
-
 ## Getting Started
 
 This project is a starting point for a Flutter
