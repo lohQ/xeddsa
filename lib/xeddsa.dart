@@ -43,6 +43,7 @@ final xeddsaVerify = xeddsaVerifyPointer.asFunction<XeddsaVerify>();
 class Xeddsa{
 
   void _copyBytesToPointer(Pointer<Uint8> pointer, List<int> kBytes, [String nameOfBytes]) async {
+    print("$nameOfBytes bytes: $kBytes");
     try{
       for(int i = 0; i < kBytes.length; i++){
         pointer[i] = kBytes[i];
@@ -55,7 +56,7 @@ class Xeddsa{
   List<int> _getBytesOfLength(Pointer<Uint8> pointer, int len){
     try{
       final resultingList = pointer.asTypedList(len);
-      return resultingList;
+      return List.from(resultingList);
     }catch(e){
       print("failed to return array of length $len from pointer");
       return null;
@@ -68,7 +69,7 @@ class Xeddsa{
     }
   }
 
-  Future<Signature> sign(
+  Future<List<int>> sign(
     {PrivateKey identityPrivateKey, PublicKey identityPublicKey, 
      List<int> message}) async {
 
@@ -93,7 +94,7 @@ class Xeddsa{
         print("successfully signed");
         final signatureBytes = _getBytesOfLength(signaturePointer, 64);
         _freePointers(pointerList);
-        return Signature(signatureBytes, publicKey: identityPublicKey);
+        return signatureBytes;
       }else{
         print("failed to sign: return value $signResult");
       }
@@ -104,14 +105,14 @@ class Xeddsa{
     return null;
   }
 
-  bool verify({Signature signature, PublicKey identityPublicKey, List<int> message}){
+  bool verify({List<int> signature, PublicKey publicIdentityKey, List<int> message}){
     final signaturePointer = allocate<Uint8>(count: 64);
     final publicKeyPointer = allocate<Uint8>(count: 32);
     final msgLen = message.length;
     final messagePointer = allocate<Uint8>(count: msgLen);
     final pointerList = [signaturePointer, publicKeyPointer, messagePointer];
-    _copyBytesToPointer(signaturePointer, signature.bytes, "signature");
-    _copyBytesToPointer(publicKeyPointer, identityPublicKey.bytes, "public identity key");
+    _copyBytesToPointer(signaturePointer, signature, "signature");
+    _copyBytesToPointer(publicKeyPointer, publicIdentityKey.bytes, "public identity key");
     _copyBytesToPointer(messagePointer, message, "message");
     try{
       final verifyResult = xeddsaVerify(signaturePointer, publicKeyPointer, messagePointer, msgLen);
